@@ -1,4 +1,4 @@
-### 🔍 GCS Secure Report Download System
+### 🔍 GCS (Google-Cloud-Storage) Secure Report Download System
 * This project provides a secure way to download files from Google Cloud Storage (GCS) by generating temporary, authenticated links, ensuring your storage remains private while allowing authorized access.
     * Secure Downloads (Signed URLs): Instead of making your GCS bucket public, the system generates V4 Signed URLs that are valid for only 10 minutes.
     * Korean Filename Optimization (NFC Normalization): It uses unicodedata to perform NFC Normalization, preventing filename mismatch errors caused by different encoding methods between macOS (NFD) and Windows/Linux (NFC).
@@ -23,6 +23,13 @@ BASE_PATH=storage_name/Report
 
 # The port number where the FastAPI server will run
 DEPLOY_SERVER_PORT=8000
+```
+
+### - How to Run
+
+```
+pip install fastapi uvicorn google-cloud-storage python-dotenv jinja2
+uvicorn main:app --reload
 ```
 
 ---
