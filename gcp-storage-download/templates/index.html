@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>리포트 다운로드 시스템</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; line-height: 1.6; }
+        .container { max-width: 500px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+        .download-btn { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .download-btn:hover { background-color: #45a049; }
+        .info { font-size: 0.9em; color: #666; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📄 리포트 다운로드</h2>
+        <p class="info">다운로드할 리포트 파일명을 입력하세요.</p>
+        
+        <input type="text" id="fileNameInput" placeholder="예: test_report.pdf">
+        
+        <button class="download-btn" onclick="handleDownload()">
+            리포트 다운로드 실행
+        </button>
+    </div>
+
+    <script>
+        async function handleDownload() {
+            const fileName = document.getElementById('fileNameInput').value.trim();
+            
+            if (!fileName) {
+                alert("파일명을 입력해주세요.");
+                return;
+            }
+
+            try {
+                // 백엔드에 서명된 URL 요청
+                const response = await fetch(`/get_report_download_url?file_name=${encodeURIComponent(fileName)}`);
+                const data = await response.json();
+
+                if (data.download_url) {
+                    // 브라우저에서 다운로드 실행
+                    const link = document.createElement('a');
+                    link.href = data.download_url;
+                    link.setAttribute('download', fileName);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                } else {
+                    alert(data.message || "파일을 찾을 수 없습니다.");
+                }
+            } catch (error) {
+                console.error("다운로드 오류:", error);
+                alert("서버 통신 중 오류가 발생했습니다.");
+            }
+        }
+    </script>
+</body>
+</html>
